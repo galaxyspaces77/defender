@@ -1,0 +1,48 @@
+sudo dnf remove docker \
+                  docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-engine \
+                  podman \
+                  runc
+
+sudo dnf -y install dnf-plugins-core
+sudo dnf config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
+
+To install the latest version, run:
+sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+If prompted to accept the GPG key, verify that the fingerprint matches 060A 61C5 1B55 8A7F 742B 77AA C52F EB6B 621E 9F35, and if so, accept it.
+
+This command installs Docker, but it doesn't start Docker. It also creates a docker group, however, it doesn't add any users to the group by default.
+
+Start Docker Engine.
+
+sudo systemctl enable --now docker
+This configures the Docker systemd service to start automatically when you boot your system. If you don't want Docker to start automatically, use sudo systemctl start docker instead.
+
+To install a specific version, start by listing the available versions in the repository:
+
+
+ dnf list docker-ce --showduplicates | sort -r
+
+docker-ce.x86_64    3:28.1.1-1.el9    docker-ce-stable
+docker-ce.x86_64    3:28.1.0-1.el9    docker-ce-stable
+<...>
+The list returned depends on which repositories are enabled, and is specific to your version of RHEL (indicated by the .el9 suffix in this example).
+
+Install a specific version by its fully qualified package name, which is the package name (docker-ce) plus the version string (2nd column), separated by a hyphen (-). For example, docker-ce-3:28.1.1-1.el9.
+
+Replace <VERSION_STRING> with the desired version and then run the following command to install:
+
+
+ sudo dnf install docker-ce-VERSION_STRING docker-ce-cli-VERSION_STRING containerd.io docker-buildx-plugin docker-compose-plugin
+This command installs Docker, but it doesn't start Docker. It also creates a docker group, however, it doesn't add any users to the group by default.
+
+Start Docker Engine.
+
+
+ sudo systemctl enable --now docker
+This configures the Docker systemd service to start automatically when you boot your system. If you don't want Docker to start automatically, use sudo systemctl start docker instead.
